@@ -23,6 +23,8 @@
  */
 
 import { ConcurrencyManager } from 'axios-concurrency';
+import OrganConfigModel from '../model/OrganConfigModel';
+import OrganConfig from '../processes/OrganConfig';
 import axios, { AxiosInstance } from 'axios';
 const MAX_CONCURRENT_REQUESTS = 5;
 
@@ -36,7 +38,7 @@ function newInstance(baseURL: string) {
     baseURL,
     method: 'post',
     headers: { 'Content-Type': 'application/json',
-                "api_key": "d473829e851737446ae3d7d2c2302f618ebee238" },
+                "api_key": process.env.API_KEY },
   });
   manager = ConcurrencyManager(axiosInstance, MAX_CONCURRENT_REQUESTS);
 }

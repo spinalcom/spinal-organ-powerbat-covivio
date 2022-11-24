@@ -27,6 +27,7 @@ import { spinalCore, Model } from 'spinal-core-connectorjs_type';
 export interface ClientConfigObj extends spinal.Model {
   apiLogin: spinal.Str;
   apiPassword: spinal.Str;
+  apiKey: spinal.Str;
   pullInterval: spinal.Val;
   lastSync: spinal.Val;
 }
@@ -47,6 +48,7 @@ export default class OrganConfigModel extends Model {
     this.add_attr('client', {
       apiLogin: '',
       apiPassword: '',
+      apiKey:'',
       pullInterval: 5 * 60 * 1000,
       lastSync: 0,
       organStatus: 0
@@ -66,6 +68,8 @@ export default class OrganConfigModel extends Model {
       this.client.apiLogin.set(process.env.API_LOGIN);
     if (process?.env.API_PASSWORD)
       this.client.apiPassword.set(process.env.API_PASSWORD);
+    if (process?.env.API_KEY)
+      this.client.apiKey.set(process.env.API_KEY);
     if (process?.env.PULL_INTERVAL)
       this.client.pullInterval.set(process.env.PULL_INTERVAL);
   }
