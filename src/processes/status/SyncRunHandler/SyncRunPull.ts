@@ -73,8 +73,8 @@ export class SyncRunPull {
     this.nwService = nwService;
     this.sandBoxDeviceId = "127591548511ffad2af6c7f74c0b7e45a03d690f";
     this.mapping = new Map<string, string>([
-      ["Compteur Etage 1", "098cba82bc997a03d7b30847a3a0d07ae330c9e2"],
-      ["Compteur Etage 2", "2af45dacea31c91cb0440c102f0ebae629ece62e"]
+      ["Energie General", "098cba82bc997a03d7b30847a3a0d07ae330c9e2"],
+      ["ENERGIE PC", "2af45dacea31c91cb0440c102f0ebae629ece62e"]
     ]);
     this.endpoints = [];
   }
@@ -237,7 +237,7 @@ export class SyncRunPull {
     const context = await this.getContext();
 
     const endpoints = await context.findInContext(context,
-      (node) => node.info.name.get() === "name1" || node.info.name.get() === "name2" 
+      (node) => node.info.name.get() === "Energie General" || node.info.name.get() === "ENERGIE PC" 
     );
     /*const devices = await context.findInContext(
       context,
