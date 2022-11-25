@@ -178,7 +178,6 @@ export class SyncRunPull {
       const node = await this.nwService.getData(endpoint);
       //const timeseries = await this.nwService.getTimeseries(endpoint);
       const time = new Date(); 
-      
       const body = {version: 1,
                     type: "GENERIC_DECIMAL",
                     datas: [
@@ -197,18 +196,50 @@ export class SyncRunPull {
       catch (e) {
         console.log(e);
       }
-      
-
     }
+  }
 
+  async bindEndpointData(){
+    for (const endpoint of this.endpoints) {
+      const node = await this.nwService.getData(endpoint);
+      //const timeseries = await this.nwService.getTimeseries(endpoint);
+      const time = new Date(); 
+      const body = {version: 1,
+                    type: "GENERIC_DECIMAL",
+                    datas: [
+                      {
+                        ts: time,
+                        message: node.currentValue.get()
+                      }
+                    ]};
+      console.log(body)
+      const streamId = this.mapping.get(node.name.get());
+
+      let currentValueModel = node.info.currentValue;
+      currentValueModel.bind( async () =>{
+        try {
+          await axiosInstance.post(
+            `rest/v1/datas/devices/${this.sandBoxDeviceId}/streams/${streamId}/values`
+            ,body);
+        }
+        catch (e) {
+          console.log(e);
+        }
+      })
+      
+    }
   }
 
   async init(): Promise<void> {
     await this.initContext();
     console.log("Context init Done...")
-    await this.createSandboxIfNotExist();
+    //await this.createSandboxIfNotExist();
     const context = await this.getContext();
-    const devices = await context.findInContext(
+
+    const endpoints = await context.findInContext(context,
+      (node) => node.info.name.get() === "name1" || node.info.name.get() === "name2" 
+    );
+    /*const devices = await context.findInContext(
       context,
       (node) => node.info.name.get() === "Device Demo"
     );
@@ -219,8 +250,11 @@ export class SyncRunPull {
     const endpoints = await this.nwService.getEndpoint(this.deviceId);
     this.endpoints = endpoints;
     this.sendEndpointData();
-
-
+    */
+    for (const endpoint of endpoints) {
+      this.endpoints.push(endpoint.info.id.get());
+    }
+    this.sendEndpointData();
     try {
 
     } catch (e) {
